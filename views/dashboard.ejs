@@ -1,0 +1,118 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container main-content">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-tachometer-alt text-gradient"></i> My Dashboard
+                </h2>
+                <a href="/blogs/create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New Blog
+                </a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-blog fa-2x text-primary mb-2"></i>
+                            <h4><%= blogs.length %></h4>
+                            <p class="text-muted">Total Blogs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-eye fa-2x text-success mb-2"></i>
+                            <h4><%= blogs.filter(blog => blog.isPublished).length %></h4>
+                            <p class="text-muted">Published</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-draft2digital fa-2x text-warning mb-2"></i>
+                            <h4><%= blogs.filter(blog => !blog.isPublished).length %></h4>
+                            <p class="text-muted">Drafts</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog List -->
+            <% if (blogs.length === 0) { %>
+                <div class="card text-center">
+                    <div class="card-body py-5">
+                        <i class="fas fa-blog fa-4x text-muted mb-3"></i>
+                        <h4>No blogs created yet</h4>
+                        <p class="text-muted">Start sharing your knowledge with the world!</p>
+                        <a href="/blogs/create" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Your First Blog
+                        </a>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="row">
+                    <% blogs.forEach(function(blog) { %>
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 fade-in-up">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge <%= blog.isPublished ? 'bg-success' : 'bg-warning' %>">
+                                            <%= blog.isPublished ? 'Published' : 'Draft' %>
+                                        </span>
+                                        <small class="text-muted">
+                                            <%= blog.createdAt.toLocaleDateString() %>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= blog.title %></h5>
+                                    <p class="card-text">
+                                        <%= blog.content.substring(0, 100) %>...
+                                    </p>
+                                    <div class="mb-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock"></i> <%= blog.readTime %> min read
+                                        </small>
+                                    </div>
+                                    <% if (blog.tags && blog.tags.length > 0) { %>
+                                        <div class="mb-3">
+                                            <% blog.tags.slice(0, 2).forEach(function(tag) { %>
+                                                <span class="badge bg-secondary me-1"><%= tag %></span>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="btn-group w-100" role="group">
+                                        <% if (blog.isPublished) { %>
+                                            <a href="/blogs/blog/<%= blog._id %>" class="btn btn-info btn-sm">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        <% } %>
+                                        <a href="/blogs/edit/<%= blog._id %>" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form method="POST" action="/blogs/delete/<%= blog._id %>?_method=DELETE" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

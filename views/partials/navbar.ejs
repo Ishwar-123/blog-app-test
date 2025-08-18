@@ -1,0 +1,94 @@
+<%
+// Set default currentPage if not provided
+if (typeof currentPage === 'undefined') {
+  currentPage = '';
+}
+%>
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/blogs">
+            <i class="fas fa-code"></i> CodeBlog
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link <%= currentPage === 'home' ? 'active' : '' %>" href="/blogs">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <% if (user) { %>
+                <li class="nav-item">
+                    <a class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>" href="/blogs/dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= currentPage === 'create' ? 'active' : '' %>" href="/blogs/create">
+                        <i class="fas fa-plus"></i> Create Blog
+                    </a>
+                </li>
+                <% } %>
+            </ul>
+            
+            <ul class="navbar-nav">
+                <% if (user) { %>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i> <%= user.name %>
+                    </a>
+                    <ul class="dropdown-menu bg-secondary">
+                        <li><a class="dropdown-item text-light" href="/blogs/dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-light" href="/auth/logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+                <% } else { %>
+                <li class="nav-item">
+                    <a class="nav-link <%= currentPage === 'login' ? 'active' : '' %>" href="/auth/login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= currentPage === 'register' ? 'active' : '' %>" href="/auth/register">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Flash Messages -->
+<div class="container mt-3">
+    <% if (typeof success_msg != 'undefined' && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle"></i> <%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    
+    <% if (typeof error_msg != 'undefined' && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle"></i> <%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    
+    <% if (typeof error != 'undefined' && error.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle"></i> <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+</div>
