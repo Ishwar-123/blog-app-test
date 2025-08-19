@@ -14,6 +14,7 @@ const connectDB = require('./config/db');
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 
@@ -37,7 +38,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false, // true if HTTPS
+    secure: false, // change to true in production with HTTPS
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -55,12 +56,16 @@ app.use((req, res, next) => {
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
+
+  // ✅ Default title
+  res.locals.title = "CodeBlog"; 
   next();
 });
 
 // Routes
 app.use('/auth', authRoutes);
 app.use('/blogs', blogRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 // Home route
 app.get('/', (req, res) => {
